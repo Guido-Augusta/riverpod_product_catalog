@@ -11,6 +11,9 @@ class ProductListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     final productListAsync = ref.watch(productListControllerProvider);
     final controller = ref.read(productListControllerProvider.notifier);
 
@@ -32,6 +35,8 @@ class ProductListScreen extends ConsumerWidget {
         child: const Icon(Icons.keyboard_arrow_up_rounded),
       ),
       body: productListAsync.when(
+        skipLoadingOnReload: false,
+        skipLoadingOnRefresh: false,
         data: (state) {
           if (state.products.isEmpty) {
             return const Center(child: Text('No products found'));
@@ -39,14 +44,45 @@ class ProductListScreen extends ConsumerWidget {
 
           return SafeArea(
             child: RefreshIndicator(
-              onRefresh: () => controller.refresh(),
+              onRefresh: () async {
+                try {
+                  await controller.refresh();
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(
+                              Icons.wifi_off_rounded,
+                              color: colorScheme.error,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                e.toString(),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                  }
+                }
+              },
               child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
                   final pixels = scrollInfo.metrics.pixels;
                   final maxScroll = scrollInfo.metrics.maxScrollExtent;
 
-                  if (pixels < maxScroll - 350) {
-                    controller.resetErrorIfAny();
+                  if (pixels < maxScroll - 300) {
+                    controller.resetLoadMoreError();
                   }
 
                   if (pixels >= maxScroll - 200) {
@@ -98,19 +134,17 @@ class ProductListScreen extends ConsumerWidget {
                               child: Text(
                                 state.errorMessage ??
                                     'Failed to load more data. Please try again.',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.outline,
                                 ),
                               ),
                             ),
                           ),
-                          PaginationStatus.reachedMax => const Center(
+                          PaginationStatus.reachedMax => Center(
                             child: Text(
                               'Semua produk telah ditampilkan',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colorScheme.outline,
                               ),
                             ),
                           ),
@@ -129,12 +163,12 @@ class ProductListScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              Icon(Icons.error_outline, size: 48, color: colorScheme.error),
               const SizedBox(height: 8),
               Text(err.toString()),
               const SizedBox(height: 12),
               ElevatedButton(
-                onPressed: () => controller.refresh(),
+                onPressed: () => ref.invalidate(productListControllerProvider),
                 child: const Text('Coba Lagi'),
               ),
             ],

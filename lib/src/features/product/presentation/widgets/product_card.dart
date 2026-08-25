@@ -9,8 +9,12 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Card(
-      color: Colors.white,
+      color: colorScheme.surfaceContainerHighest,
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
@@ -25,7 +29,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: colorScheme.surfaceContainerHighest,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 child: CachedNetworkImage(
@@ -48,9 +52,8 @@ class ProductCard extends StatelessWidget {
                     product.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -59,10 +62,9 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.green,
+                        style: textTheme.titleMedium?.copyWith(
+                          color: colorScheme.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                         ),
                       ),
                       Row(

@@ -89,7 +89,7 @@ class ProductListController extends _$ProductListController {
   }
 
   // Reset error jika user menjauh dari area bawah
-  void resetErrorIfAny() {
+  void resetLoadMoreError() {
     final currentState = state.value;
     if (currentState != null &&
         currentState.status == PaginationStatus.errorLoadingMore) {
@@ -100,7 +100,21 @@ class ProductListController extends _$ProductListController {
   }
 
   Future<void> refresh() async {
-    ref.invalidateSelf();
-    await future; // Menunggu fetch build() yang baru selesai (cocok untuk RefreshIndicator)
+    try {
+      final productList = await _fetchProducts(skip: 0);
+
+      state = AsyncValue.data(
+        ProductPaginationState(
+          products: productList.products,
+          total: productList.total,
+          status: productList.products.length >= productList.total
+              ? PaginationStatus.reachedMax
+              : PaginationStatus.initial,
+        ),
+      );
+    } catch (e) {
+      if (e is DioException && CancelToken.isCancel(e)) return;
+      rethrow;
+    }
   }
 }
