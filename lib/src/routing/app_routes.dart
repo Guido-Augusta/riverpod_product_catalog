@@ -1,5 +1,7 @@
 enum AppRoutes {
-  productList('/'),
+  splash('/splash'),
+  login('/login'),
+  productList('/products'),
   productDetail('/products/:id');
 
   final String path;
