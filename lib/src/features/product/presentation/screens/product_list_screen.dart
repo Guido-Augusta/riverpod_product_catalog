@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:product_catalog_app/src/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:product_catalog_app/src/features/product/presentation/controllers/product_list_controller.dart';
 import 'package:product_catalog_app/src/features/product/presentation/controllers/product_list_state.dart';
 import 'package:product_catalog_app/src/features/product/presentation/widgets/product_card.dart';
@@ -18,7 +19,17 @@ class ProductListScreen extends ConsumerWidget {
     final controller = ref.read(productListControllerProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Product List')),
+      appBar: AppBar(
+        title: const Text('Product List'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authControllerProvider.notifier).logout();
+            },
+            icon: Icon(Icons.logout, color: colorScheme.errorContainer),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         mini: true,
         onPressed: () {

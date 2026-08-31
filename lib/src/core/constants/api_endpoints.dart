@@ -1,6 +1,12 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String products = '/products';
-  static String productDetail(int id) => '/products/$id';
+  // Auth
+  static const String login = '/auth/login';
+  static const String currentUser = '/auth/me';
+  static const String refreshToken = '/auth/refresh';
+
+  // Products
+  static const String products = '/auth/products';
+  static String productDetail(int id) => '/auth/products/$id';
 }

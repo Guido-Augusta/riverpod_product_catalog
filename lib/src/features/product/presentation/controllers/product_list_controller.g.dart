@@ -35,7 +35,7 @@ final class ProductListControllerProvider
 }
 
 String _$productListControllerHash() =>
-    r'08e14c70b2f72cbae0aff603d75fd8a685898836';
+    r'375f94b4bc0804c6e9ce579e3e667ba974f1e847';
 
 abstract class _$ProductListController
     extends $AsyncNotifier<ProductPaginationState> {

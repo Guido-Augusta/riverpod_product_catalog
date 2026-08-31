@@ -20,7 +20,7 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
         argument: null,
         retry: null,
         name: r'dioProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -47,4 +47,4 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioHash() => r'1bb0e1aefae76db0dc836504be5cc9443aac8da2';
+String _$dioHash() => r'7944d2ef7e8f06358fa2c347599b50d0cb73e9f0';

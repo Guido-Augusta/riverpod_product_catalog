@@ -18,7 +18,7 @@ class AppRoot extends ConsumerWidget {
     final theme = MaterialTheme(Theme.of(context).textTheme);
 
     return MaterialApp.router(
-      theme: theme.light(),
+      theme: theme.lightMediumContrast(),
       darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
