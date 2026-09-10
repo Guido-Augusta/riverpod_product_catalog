@@ -6,12 +6,47 @@ import 'package:product_catalog_app/src/features/product/presentation/controller
 import 'package:product_catalog_app/src/features/product/presentation/controllers/product_list_state.dart';
 import 'package:product_catalog_app/src/features/product/presentation/widgets/product_card.dart';
 import 'package:product_catalog_app/src/routing/app_routes.dart';
+import 'package:product_catalog_app/src/routing/main_nav_scaffold.dart';
 
-class ProductListScreen extends ConsumerWidget {
+class ProductListScreen extends ConsumerStatefulWidget {
   const ProductListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProductListScreen> createState() => _ProductListScreenState();
+}
+
+class _ProductListScreenState extends ConsumerState<ProductListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('product list screen build');
+    // Dengarkan event tap ulang dari bottom navigation bar tab 0 (Products)
+    ref.listen<TabReselectEvent?>(tabReselectNotifierProvider, (
+      previous,
+      next,
+    ) {
+      if (next?.tabIndex == 0) {
+        _scrollToTop();
+      }
+    });
+
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -32,17 +67,7 @@ class ProductListScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         mini: true,
-        onPressed: () {
-          final primaryScroll = PrimaryScrollController.of(context);
-          // scroll to top
-          if (primaryScroll.hasClients) {
-            primaryScroll.animateTo(
-              0,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeOut,
-            );
-          }
-        },
+        onPressed: _scrollToTop,
         child: const Icon(Icons.keyboard_arrow_up_rounded),
       ),
       body: productListAsync.when(
@@ -102,6 +127,7 @@ class ProductListScreen extends ConsumerWidget {
                   return false;
                 },
                 child: CustomScrollView(
+                  controller: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverPadding(

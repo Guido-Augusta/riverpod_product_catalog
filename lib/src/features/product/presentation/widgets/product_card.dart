@@ -14,22 +14,22 @@ class ProductCard extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Card(
-      color: colorScheme.surfaceContainer,
+      // color: colorScheme.surfaceContainer,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        focusColor: Colors.transparent,
+        // highlightColor: Colors.transparent,
+        // splashColor: Colors.transparent,
+        // hoverColor: Colors.transparent,
+        // focusColor: Colors.transparent,
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Container(
-                color: colorScheme.surfaceContainer,
+                // color: colorScheme.surfaceContainer,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 child: CachedNetworkImage(

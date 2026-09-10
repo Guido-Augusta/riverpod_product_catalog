@@ -17,7 +17,7 @@ class AuthRepository {
   Future<AuthResponseModel> login({
     required String username,
     required String password,
-    int expiresInMins = 1,
+    int expiresInMins = 30,
   }) async {
     try {
       final response = await _dio.post(
